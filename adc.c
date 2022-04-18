@@ -29,7 +29,7 @@ void adc_init()
                               // it can test the state of this bit to determine when it can read the result of the conversion from the data registers.
                               // As long as this bit is a one, the data registers do not yet contain a valid result
 	
-    ADCSRA &= 0b11000111;
+    // ADCSRA &= 0b11000111;
     // ADMUX = 0b01000010;
     // ADCSRA = 0b10000111;
 
@@ -40,7 +40,6 @@ unsigned char adc_sample()
     // Convert an analog input and return the 8-bit result
     
     ADCSRA |= (1 << ADSC);
-    
     while((ADCSRA & (1 << ADSC)) != 0)
     {}
     
