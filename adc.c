@@ -15,12 +15,13 @@ void adc_init()
 	
 	ADMUX &= 0b11110000;
 	
-	ADMUX |= (1 << MUX1);  // Configuring PC2 for light sensor... DONT FORGET TO CONFIGURE PC1 FOR MOISTURE SENSOR
+	// ADMUX |= (1 << MUX1);  // Configuring PC2 for light sensor... DONT FORGET TO CONFIGURE PC1 FOR MOISTURE SENSOR
+
 	
     // The ADEN bit enables the ADC module. Must be set to 1 to do any ADC operations.
 	
 	ADCSRA |= ((1 << ADPS1) | (1 << ADPS2) | (1 << ADEN));
-    ADCSRA &= (1 << ADPS0);
+    ADCSRA &= ~(1 << ADPS0);
 
     // The ADPS2, ADPS1 and ADPS0 bits selects the prescaler divisor value. 1 1 0 for a pre scalar of 64 --> Clock/atmega range = 7372800/64 ~ 115 kHZ (needs to be 50 - 200kHz)
 	
@@ -35,8 +36,11 @@ void adc_init()
 
 }
 
-unsigned char adc_sample()
+unsigned char adc_sample(unsigned char channel)
 {
+    ADMUX &= 0b11110000;
+    ADMUX |= channel;           // channel is ADC pin number, 
+
     // Convert an analog input and return the 8-bit result
     
     ADCSRA |= (1 << ADSC);
