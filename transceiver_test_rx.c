@@ -12,9 +12,9 @@
 #include <avr/interrupt.h>
 #include <stdint.h>
 #include <util/delay.h>
-#include "radioPinFunctions.c"
+// #include "radioPinFunctions.c"
 #include "nrf24.h"
-#include "nrf24.c"
+// #include "nrf24.c"
 
 volatile uint8_t data_array[3] = {0,1,0};
 uint8_t address_Tx[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
@@ -28,13 +28,13 @@ void SetupRadio(){
 }
 
 void SetupIO(){
-    DDRD|=(1<<PD5)|(1<<PD6)|(1<<PD7); // traffic light LEDs
+    DDRD|=(1<<2)|(1<<3)|(1<<4); // traffic light LEDs
 }
 
 void ShowLights(){
-    if (data_array[0]>0) {PORTD|=(1<<PD5);} else {PORTD&=~(1<<PD5);}
-    if (data_array[1]>0) {PORTD|=(1<<PD6);} else {PORTD&=~(1<<PD6);}
-    if (data_array[2]>0) {PORTD|=(1<<PD7);} else {PORTD&=~(1<<PD7);}
+    if (data_array[0]>0) {PORTD|=(1<<2);} else {PORTD&=~(1<<2);}
+    if (data_array[1]>0) {PORTD|=(1<<3);} else {PORTD&=~(1<<3);}
+    if (data_array[2]>0) {PORTD|=(1<<4);} else {PORTD&=~(1<<4);}
 }
 
 int main()

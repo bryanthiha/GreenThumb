@@ -10,9 +10,9 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <util/delay.h>
-#include "radioPinFunctions.c"
+// #include "radioPinFunctions.c"
 #include "nrf24.h"
-#include "nrf24.c"
+// #include "nrf24.c"
 
 void waitMs1(){_delay_ms(1);}
 void waitMs(int ms){while (ms-->0){waitMs1();}}
@@ -21,6 +21,12 @@ void waitSec(int sec){while (sec-->0){waitMs(1000);}}
 volatile uint8_t data_array[3] = {1,1,1};
 uint8_t address_Tx[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
 uint8_t address_Rx[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
+
+// void setLights(uint8_t green, uint8_t red){
+//     DDRD|=(1<<PD6)|(1<<PD6);
+//     if (green>0) {PORTD|=(1<<PD6);} else {PORTD&=~(1<<PD6);}
+//     if (red>0) {PORTD|=(1<<PD7);} else {PORTD&=~(1<<PD7);}
+// }
 
 void sendBytes(uint8_t b1, uint8_t b2, uint8_t b3){
     data_array[0]=b1;
@@ -32,14 +38,8 @@ void sendBytes(uint8_t b1, uint8_t b2, uint8_t b3){
     
     uint8_t status;
     status = nrf24_lastMessageStatus();
-    if(status == NRF24_TRANSMISSON_OK) {setLights(1,0);}
-    else if(status == NRF24_MESSAGE_LOST) {setLights(0,1);}
-}
-
-void setLights(uint8_t green, uint8_t red){
-    DDRD|=(1<<PD6)|(1<<PD6);
-    if (green>0) {PORTD|=(1<<PD6);} else {PORTD&=~(1<<PD6);}
-    if (red>0) {PORTD|=(1<<PD7);} else {PORTD&=~(1<<PD7);}
+    // if(status == NRF24_TRANSMISSON_OK) {setLights(1,0);}
+    // else if(status == NRF24_MESSAGE_LOST) {setLights(0,1);}
 }
 
 int main()
@@ -50,7 +50,7 @@ int main()
     nrf24_tx_address(address_Rx);
     nrf24_rx_address(address_Tx);    
 
-    setLights(1,1); waitMs(500);
+    // setLights(1,1); waitMs(500);
 
     while(1)
     {

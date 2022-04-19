@@ -12,6 +12,7 @@
 * -----------------------------------------------------------------------------
 */
 #include "nrf24.h"
+#include <avr/io.h>
 
 uint8_t payload_len;
 
@@ -348,4 +349,85 @@ void nrf24_writeRegister(uint8_t reg, uint8_t* value, uint8_t len)
     spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
     nrf24_transmitSync(value,len);
     nrf24_csn_digitalWrite(HIGH);
+}
+
+/* -------------------------------------------------------------------------- */
+/* In this function you should do the following things:
+ *    - Set MISO pin input
+ *    - Set MOSI pin output
+ *    - Set SCK pin output
+ *    - Set CSN pin output
+ *    - Set CE pin output     */
+/* -------------------------------------------------------------------------- */
+extern void nrf24_setupPins(){
+    DDRB &= ~(1 << PB4); //MISO
+
+    DDRB |= (1 << PB3); //MOSI
+    DDRB |= (1 << PB5); //SCK
+    DDRB |= (1 << PB2); //CSN
+    DDRB |= (1 << PB0); //CE
+}
+
+/* -------------------------------------------------------------------------- */
+/* nrf24 CE pin control function
+ *    - state:1 => Pin HIGH
+ *    - state:0 => Pin LOW     */
+/* -------------------------------------------------------------------------- */
+extern void nrf24_ce_digitalWrite(uint8_t state){
+    if(state == 1){
+        PORTB |= (1 << PB0);
+    }
+    else if(state == 0){
+        PORTB &= ~(1 << PB0);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* nrf24 CSN pin control function
+ *    - state:1 => Pin HIGH
+ *    - state:0 => Pin LOW     */
+/* -------------------------------------------------------------------------- */
+extern void nrf24_csn_digitalWrite(uint8_t state){
+    if(state == 1){
+        PORTB |= (1 << PB2);
+    }
+    else if(state == 0){
+        PORTB &= ~(1 << PB2);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* nrf24 SCK pin control function
+ *    - state:1 => Pin HIGH
+ *    - state:0 => Pin LOW     */
+/* -------------------------------------------------------------------------- */
+extern void nrf24_sck_digitalWrite(uint8_t state){
+    if(state == 1){
+        PORTB |= (1 << PB5);
+    }
+    else if(state == 0){
+        PORTB &= ~(1 << PB5);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* nrf24 MOSI pin control function
+ *    - state:1 => Pin HIGH
+ *    - state:0 => Pin LOW     */
+/* -------------------------------------------------------------------------- */
+extern void nrf24_mosi_digitalWrite(uint8_t state){
+    if(state == 1){
+        PORTB |= (1 << PB3);
+    }
+    else if(state == 0){
+        PORTB &= ~(1 << PB3);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* nrf24 MISO pin read function
+/* - returns: Non-zero if the pin is high */
+/* -------------------------------------------------------------------------- */
+extern uint8_t nrf24_miso_digitalRead(){
+    return PINB & (1 << 4);
 }
